@@ -17,7 +17,6 @@ class Post extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'id',
         'user_id',
         'title',
         'content',
