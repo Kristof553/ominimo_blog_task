@@ -1,12 +1,16 @@
-import axios from "axios";
+import {Container, Nav, Navbar, NavbarBrand, NavItem} from "reactstrap";
+import PostContainer from "./PostContainer.jsx";
+import {useNavigate} from "react-router-dom";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function LandingPage(){
+
     const navigate = useNavigate();
     const token = Cookies.get("XSRF-TOKEN");
 
-    const handleLogout = async () => {
+    const handleLogout = async (e) => {
+        e.preventDefault()
         try {
             await axios.post(
                 "http://localhost:8000/logout",
@@ -18,7 +22,6 @@ export default function LandingPage(){
                     },
                 }
             );
-
             console.log("Logged out");
             navigate("/login");
         } catch (err) {
@@ -27,9 +30,18 @@ export default function LandingPage(){
     };
 
     return (
-        <div>
-            <h1>Welcome to the Dashboard!</h1>
-            <button onClick={handleLogout}>Logout</button>
-        </div>
+        <Container>
+            <Navbar className="bg-dark-subtle sticky-top" expand="md">
+                <NavbarBrand href="/">
+                    Ominimo Blog
+                </NavbarBrand>
+                <Nav className="ml-auto" navbar>
+                    <NavItem onClick={handleLogout}>
+                        Kijelentkezés
+                    </NavItem>
+                </Nav>
+            </Navbar>
+            <PostContainer/>
+        </Container>
     );
 }
