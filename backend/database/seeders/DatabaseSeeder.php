@@ -14,6 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::create([
+            'name' => 'adminuser',
+            'email' => 'admin@email.com',
+            'password' => bcrypt('yourpassword'),
+            'role' => 'admin',
+        ]);
+
         $users = User::factory(10)->create();
         Post::factory(10)->create()->each(function ($post) use ($users) {
             $post->user_id = $users->random()->id;
