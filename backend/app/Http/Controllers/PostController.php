@@ -20,7 +20,7 @@ abstract class PostController extends Controller
 
     public function create()
     {
-        return response()->json(['message' => 'Form endpoint for SPA']);
+        return response()->json(['message' => 'Form endpoint for Blog Create']);
     }
 
     public function store(Request $request)
@@ -54,7 +54,7 @@ abstract class PostController extends Controller
         ]);
 
         $post->update($request->only('title', 'content'));
-        return response()->json($post);
+        return response()->json(['message' => 'Post updated', 'post' => $post]);
     }
 
     public function destroy(Post $post)
