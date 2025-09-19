@@ -1,7 +1,10 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import Register from './Register.jsx'
+import App from './App.jsx'
+import React from "react";
 
 createRoot(document.getElementById('root')).render(
-    <Register />
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>
 )
