@@ -1,14 +1,21 @@
-import {Container, Nav, Navbar, NavbarBrand, NavItem} from "reactstrap";
+import {Container, Nav, Navbar, NavbarBrand, NavItem, NavLink} from "reactstrap";
 import PostContainer from "./PostContainer.jsx";
 import {useNavigate} from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
+import {useState} from "react";
+import NewPostModal from "./NewPostModal.jsx";
 
 export default function LandingPage(){
+
+    const [toggleNewPostModal, setToggleNewPostModal] = useState(false)
 
     const navigate = useNavigate();
     const token = Cookies.get("XSRF-TOKEN");
 
+    const toggle = () => {
+        setToggleNewPostModal(!toggleNewPostModal)
+    }
     const handleLogout = async (e) => {
         e.preventDefault()
         try {
@@ -36,12 +43,19 @@ export default function LandingPage(){
                     Ominimo Blog
                 </NavbarBrand>
                 <Nav className="ml-auto" navbar>
-                    <NavItem onClick={handleLogout}>
+                    <NavLink onClick={toggle} href="#">
+                        Új Bejegyzés
+                    </NavLink>
+                    <NavLink onClick={handleLogout} href="#">
                         Kijelentkezés
-                    </NavItem>
+                    </NavLink>
                 </Nav>
             </Navbar>
             <PostContainer/>
+            <NewPostModal
+                toggleNewPostModal={toggleNewPostModal}
+                toggle={toggle}
+            />
         </Container>
     );
 }

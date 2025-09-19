@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -15,7 +16,7 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::with('comments')->findOrFail($id);
-        return response()->json($post);
+        return response()->json(['post' => $post]);
     }
 
     public function create()
@@ -27,16 +28,16 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
+            'postContent' => 'required|string',
         ]);
 
-        $post = Post::create([
+        Post::create([
             'title' => $request->title,
-            'content' => $request->content,
+            'content' => $request->postContent,
             'user_id' => $request->user()->id,
         ]);
 
-        return response()->json($post);
+        return response()->json(['message' => 'Blog Created']);
     }
 
     public function edit(Post $post)
