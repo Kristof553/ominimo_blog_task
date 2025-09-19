@@ -1,8 +1,8 @@
 import { useState } from "react";
+import {Form, FormGroup, Label, Input, Button, Container, Row, Col} from 'reactstrap'
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,10 +15,7 @@ export default function Login() {
             await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
                 withCredentials: true,
             });
-
-            const res = await axios.post(
-                "http://localhost:8000/login",
-                {
+            await axios.post("http://localhost:8000/login", {
                     email,
                     password,
                 },
@@ -29,27 +26,58 @@ export default function Login() {
                     },
                 }
             );
-
             navigate("/landing-page")
+
         } catch (err) {
             console.error("Login error:", err.response?.data || err.message);
         }
     };
 
     return (
-        <div>
-            <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
-            <button onClick={handleLogin}>Login</button>
-        </div>
+    <div>
+        <Container>
+            <Row>
+                <Col md/>
+                <Col md className="d-flex flex-column justify-content-center align-items-center mt-5">
+                    <h4>Ominimo Blog</h4>
+                </Col>
+                <Col md/>
+            </Row>
+            <Row>
+                <Col md/>
+                <Col md className="mt-5">
+                    <Form className="border rounded-3 p-3" onSubmit={handleLogin}>
+                        <FormGroup>
+                            <Label for="email">
+                                Email-cím:
+                            </Label>
+                            <Input
+                                type="text"
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </FormGroup>
+                        <FormGroup id='passwordFormGroup'>
+                            <Label for="password">
+                                Jelszó:
+                            </Label>
+                            <Input
+                                type="password"
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </FormGroup>
+                        <Button
+                            color="primary"
+                            type='submit'
+                        >
+                            Bejelentkezés
+                        </Button>
+                    </Form>
+                </Col>
+                <Col md/>
+            </Row>
+        </Container>
+    </div>
     );
 }
