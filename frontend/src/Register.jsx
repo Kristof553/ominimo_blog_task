@@ -12,12 +12,10 @@ export default function Register() {
 
     const handleRegister = async () => {
         try {
-            // 1. Get CSRF cookie first
             await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
                 withCredentials: true,
             });
 
-            // 2. Then call register
             const res = await axios.post(
                 "http://localhost:8000/register",
                 {
@@ -34,9 +32,9 @@ export default function Register() {
                 }
             );
 
-            console.log("✅ Registered:", res.data);
+            console.log("Registered");
         } catch (err) {
-            console.error("❌ Error:", err.response?.data || err.message);
+            console.error("Error", err.response?.data || err.message);
         }
     };
 
