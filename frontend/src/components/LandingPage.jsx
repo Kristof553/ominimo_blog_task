@@ -32,7 +32,7 @@ export default function LandingPage(){
     return (
         <Container>
             <Navbar className="bg-dark-subtle sticky-top" expand="md">
-                <NavbarBrand href="/">
+                <NavbarBrand href="/landing-page">
                     Ominimo Blog
                 </NavbarBrand>
                 <Nav className="ml-auto" navbar>

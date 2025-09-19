@@ -8,7 +8,6 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [isFailedLogin, setIsFailedLogin] = useState(false)
     const [isValidLogin, setIsValidLogin] = useState(false)
-    const [isEmptyInput, setIsEmptyInput] = useState(false)
     const navigate = useNavigate();
 
     const token = Cookies.get("XSRF-TOKEN");
@@ -16,29 +15,23 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
-            if (email === "" || password === "") {
-                setIsEmptyInput(true)
-            }
-            else{
-                setIsEmptyInput(false)
-                await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+            await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+                withCredentials: true,
+            });
+            await axios.post("http://localhost:8000/login", {
+                    email,
+                    password,
+                },
+                {
                     withCredentials: true,
-                });
-                await axios.post("http://localhost:8000/login", {
-                        email,
-                        password,
+                    headers: {
+                        "X-XSRF-TOKEN": token,
                     },
-                    {
-                        withCredentials: true,
-                        headers: {
-                            "X-XSRF-TOKEN": token,
-                        },
-                    }
-                );
-                setIsFailedLogin(false)
-                setIsValidLogin(true)
-                navigate("/landing-page")
-            }
+                }
+            );
+            setIsFailedLogin(false)
+            setIsValidLogin(true)
+            navigate("/landing-page")
         } catch (err) {
             console.error("Login error:", err.response?.data || err.message);
             handleError()
@@ -48,26 +41,6 @@ export default function Login() {
     const handleError = () => {
         setIsFailedLogin(true)
         setIsValidLogin(false)
-    }
-
-    const renderInvalidMsg = (isFailedLogin) => {
-        if (isFailedLogin) {
-            return (
-                <FormFeedback>
-                    Hibás e-mail cím vagy jelszó.
-                </FormFeedback>
-            )
-        }
-    }
-
-    const renderEmptyInputMsg = (isEmptyInput) => {
-        if (isEmptyInput) {
-            return (
-                <FormFeedback className="d-block">
-                    Kérem töltse ki az összes mezőt.
-                </FormFeedback>
-            )
-        }
     }
 
     return (
@@ -107,8 +80,6 @@ export default function Login() {
                                 invalid={isFailedLogin}
                                 valid={isValidLogin}
                             />
-                            {renderInvalidMsg(isValidLogin)}
-                            {renderEmptyInputMsg(isEmptyInput)}
                         </FormGroup>
                         <Button
                             color="primary"

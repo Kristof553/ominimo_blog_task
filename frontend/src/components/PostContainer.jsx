@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Post from "./Post.jsx";
 
 export default function PostContainer(){
     const [posts, setPosts] = useState([]);
@@ -22,8 +23,8 @@ export default function PostContainer(){
                         "X-XSRF-TOKEN": token
                     }
                 });
-
                 setPosts(res.data);
+                console.log(res.data)
             } catch (err) {
                 console.error(err);
                 setError("Failed to load posts");
@@ -31,22 +32,28 @@ export default function PostContainer(){
                 setLoading(false);
             }
         };
-
-        fetchPosts().then(r => console.log('success'));
+        fetchPosts().then(r => console.log('done'));
     }, []);
 
+    const renderPost = () => {
+        const postCards = []
+        for (let index in posts){
+            postCards.push(
+                <Post
+                    title={posts[index].title}
+                    content={posts[index].content}
+                    comments={posts[index].comments}
+                />
+            )
+        }
+        return postCards;
+    }
 
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
 
     return(
-        <div>
-            {posts.map((post) => (
-                <div key={post.id}>
-                    <h2>{post.title}</h2>
-                    <p>{post.content}</p>
-                </div>
-            ))}
+        <div className="mt-2">
+            {renderPost()}
         </div>
     )
 }
