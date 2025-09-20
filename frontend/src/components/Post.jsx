@@ -1,4 +1,4 @@
-import {Button, Card, CardBody, CardText, CardTitle, List,} from "reactstrap";
+import {Button, Card, CardBody, CardText, CardTitle, Input, List,} from "reactstrap";
 import { FaRegTrashAlt ,FaComment, FaEdit} from "react-icons/fa";
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
@@ -10,6 +10,8 @@ export default function Post({title, content, comments, id, user_id}){
 
     const [toggleComments, setToggleComments] = useState(false)
     const [toggleEditPostModal, setToggleEditPostModal] = useState(false)
+    const [newComment,setNewComment ] = useState('')
+    const [localComments, setLocalComments] = useState(comments);
     const MySwal = withReactContent(Swal)
     const token = Cookies.get("XSRF-TOKEN");
 
@@ -60,17 +62,45 @@ export default function Post({title, content, comments, id, user_id}){
         }
     }
 
+    const addComment = async () => {
+        try {
+            const res = await axios.post(
+                `http://localhost:8000/api/posts/${id}/comments`,
+                {
+                    comment: newComment,
+                },
+                {
+                    withCredentials: true,
+                    headers: {
+                        "X-XSRF-TOKEN": token,
+                    },
+                }
+            );
+            setLocalComments([...localComments, res.data.comment]);
+            setNewComment('');
+        }catch (error) {
+            console.log(error)
+        }
+    }
+
     const renderComments = () => {
         if (toggleComments){
             return (
-                <Card className="my-2 shadow p-3 mb-3 bg-light rounded w-50">
+                <Card className="my-2  p-3 mb-3 bg-light w-50">
                     <CardBody>
                         <List>
-                            {comments.map((comment) => (
-                                <li key={comment["id"]}>{comment["comment"]}</li>
+                            {localComments.map((comment) => (
+                                <li key={comment["id"]}>{comment.comment}</li>
                             ))}
                         </List>
                     </CardBody>
+                    <div className="d-flex">
+                        <Input type="text" onChange={(e) => {setNewComment(e.target.value)}}/>
+                        <Button color="primary" onClick={addComment}>
+                            Küldés
+                        </Button>
+                    </div>
+
                 </Card>
             )
         }

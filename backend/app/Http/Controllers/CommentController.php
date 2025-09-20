@@ -15,13 +15,13 @@ class CommentController extends Controller{
             'comment' => 'required|string|max:255',
         ]);
 
-        Comment::create([
+        $comment = Comment::create([
             'comment' => $request->comment,
             'post_id' => $post_id,
             'user_id' => $request->user()->id,
         ]);
 
-        return response()->json(['message' => 'Comment Created']);
+        return response()->json(['message' => 'Comment Created', 'comment' => $comment]);
     }
 
     public function destroy($comment_id)
