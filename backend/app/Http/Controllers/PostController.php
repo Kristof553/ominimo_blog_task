@@ -36,10 +36,10 @@ class PostController extends Controller
         return response()->json(['message' => 'Blog Created']);
     }
 
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
+        $post = Post::findOrFail($id);
         $this->authorize('update', $post);
-
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',

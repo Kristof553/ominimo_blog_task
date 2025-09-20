@@ -5,13 +5,18 @@ import Swal from 'sweetalert2'
 import {useState} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
-export default function Post({title, content, comments, id}){
+import EditPostModal from "./EditPostModal.jsx";
+export default function Post({title, content, comments, id, user_id}){
 
     const [toggleComments, setToggleComments] = useState(false)
+    const [toggleEditPostModal, setToggleEditPostModal] = useState(false)
     const MySwal = withReactContent(Swal)
+    const token = Cookies.get("XSRF-TOKEN");
 
+    const toggle = () => {
+        setToggleEditPostModal(!toggleEditPostModal)
+    }
     const deletePost = async () => {
-        const token = Cookies.get("XSRF-TOKEN");
         try {
             await axios.delete(
                 `http://localhost:8000/api/posts/${id}`,
@@ -29,6 +34,29 @@ export default function Post({title, content, comments, id}){
                     title: <p>Ezt a posztot nem tudod törölni mert nem te hoztad létre</p>,
                 });
             }
+        }
+    }
+
+    const checkUser = async () => {
+        try {
+            const res = await axios.get(
+                `http://localhost:8000/api/user`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "X-XSRF-TOKEN": token,
+                    }
+                },
+            );
+            if (res.data['id'] === user_id) {
+                setToggleEditPostModal(!toggleEditPostModal)
+            }else {
+                await MySwal.fire({
+                    title: <p>Ezt a posztot nem tudod szerkezteni mert nem te hoztad létre</p>,
+                });
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -65,10 +93,17 @@ export default function Post({title, content, comments, id}){
                     {' '}
                     <FaRegTrashAlt className="cursor" size={24} onClick={deletePost}/>
                     {' '}
-                    <FaEdit className="cursor" size={24}/>
+                    <FaEdit className="cursor" size={24} onClick={checkUser}/>
                 </CardBody>
                 {renderComments()}
             </Card>
+            <EditPostModal
+                toggleEditPostModal={toggleEditPostModal}
+                toggle={toggle}
+                postTitle={title}
+                postContent={content}
+                id={id}
+            />
         </div>
     )
 }

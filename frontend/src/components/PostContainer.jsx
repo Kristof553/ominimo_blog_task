@@ -37,6 +37,7 @@ export default function PostContainer(){
                     content={posts[index].content}
                     comments={posts[index].comments}
                     id={posts[index].id}
+                    user_id={posts[index].user_id}
                 />
             )
         }
