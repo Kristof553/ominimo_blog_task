@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
     public function index()
     {
         return Post::with('comments')->get();
@@ -17,11 +18,6 @@ class PostController extends Controller
     {
         $post = Post::with('comments')->findOrFail($id);
         return response()->json(['post' => $post]);
-    }
-
-    public function create()
-    {
-        return response()->json(['message' => 'Form endpoint for Blog Create']);
     }
 
     public function store(Request $request)
@@ -40,11 +36,6 @@ class PostController extends Controller
         return response()->json(['message' => 'Blog Created']);
     }
 
-    public function edit(Post $post)
-    {
-        return response()->json($post);
-    }
-
     public function update(Request $request, Post $post)
     {
         $this->authorize('update', $post);
@@ -58,11 +49,11 @@ class PostController extends Controller
         return response()->json(['message' => 'Post updated', 'post' => $post]);
     }
 
-    public function destroy(Post $post)
+    public function destroy($id)
     {
+        $post = Post::findOrFail($id);
         $this->authorize('delete', $post);
         $post->delete();
-
         return response()->json(['message' => 'Post deleted']);
     }
 }
