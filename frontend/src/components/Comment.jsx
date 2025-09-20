@@ -8,7 +8,7 @@ export default function Comment({comment, setLocalComments, localComments, token
 
     const deleteComment = async () => {
         try {
-            const res = await axios.delete(
+            await axios.delete(
                 `http://localhost:8000/api/comments/${comment["id"]}`,
                 {
                     withCredentials: true,

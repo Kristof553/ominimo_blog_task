@@ -38,6 +38,8 @@ export default function PostContainer(){
                     comments={posts[index].comments}
                     id={posts[index].id}
                     user_id={posts[index].user_id}
+                    posts={posts}
+                    setPosts={setPosts}
                 />
             )
         }

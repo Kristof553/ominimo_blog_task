@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import EditPostModal from "./EditPostModal.jsx";
 import Comment from "./Comment.jsx";
-export default function Post({title, content, comments, id, user_id}){
+export default function Post({title, content, comments, id, user_id, posts, setPosts}){
 
     const [toggleComments, setToggleComments] = useState(false)
     const [toggleEditPostModal, setToggleEditPostModal] = useState(false)
@@ -30,7 +30,7 @@ export default function Post({title, content, comments, id, user_id}){
                     }
                 },
             );
-            window.location.reload()
+            setPosts(posts.filter(p => p.id !== id));
         } catch (error) {
             if (error.response && error.response.status === 403) {
                 await MySwal.fire({
