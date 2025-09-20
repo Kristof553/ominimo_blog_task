@@ -6,6 +6,7 @@ import {useState} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import EditPostModal from "./EditPostModal.jsx";
+import Comment from "./Comment.jsx";
 export default function Post({title, content, comments, id, user_id}){
 
     const [toggleComments, setToggleComments] = useState(false)
@@ -90,12 +91,17 @@ export default function Post({title, content, comments, id, user_id}){
                     <CardBody>
                         <List>
                             {localComments.map((comment) => (
-                                <li key={comment["id"]}>{comment.comment}</li>
+                                <Comment
+                                    comment={comment}
+                                    setLocalComments={setLocalComments}
+                                    localComments={localComments}
+                                    token={token}
+                                />
                             ))}
                         </List>
                     </CardBody>
                     <div className="d-flex">
-                        <Input type="text" onChange={(e) => {setNewComment(e.target.value)}}/>
+                        <Input type="text" value={newComment} onChange={(e) => {setNewComment(e.target.value)}}/>
                         <Button color="primary" onClick={addComment}>
                             Küldés
                         </Button>
