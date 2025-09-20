@@ -51,7 +51,8 @@ export default function Post({title, content, comments, id, user_id, posts, setP
                     }
                 },
             );
-            if (res.data['id'] === user_id) {
+            console.log(res.data)
+            if (res.data['id'] === user_id || res.data['role'] === 'admin') {
                 setToggleEditPostModal(!toggleEditPostModal)
             }else {
                 await MySwal.fire({
