@@ -43,9 +43,6 @@ export default function LandingPage(){
                     Ominimo Blog
                 </NavbarBrand>
                 <Nav className="ml-auto" navbar>
-                    <NavLink  href="/register">
-                        Új felhasználó
-                    </NavLink>
                     <NavLink onClick={toggle} href="#">
                         Új Bejegyzés
                     </NavLink>
