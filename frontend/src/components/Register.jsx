@@ -1,6 +1,20 @@
 import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {
+    Button,
+    Col,
+    Container,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+    Nav,
+    Navbar,
+    NavbarBrand,
+    NavLink,
+    Row
+} from "reactstrap";
 
 export default function Register() {
     const [name, setName] = useState("");
@@ -19,9 +33,9 @@ export default function Register() {
             const res = await axios.post(
                 "http://localhost:8000/register",
                 {
-                    name,
-                    email,
-                    password,
+                    name: name,
+                    email: email,
+                    password: password,
                     password_confirmation: password,
                 },
                 {
@@ -39,12 +53,59 @@ export default function Register() {
     };
 
     return (
-        <div>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
-            <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-            <button onClick={handleRegister}>Register</button>
-        </div>
+        <Container>
+            <Navbar className="bg-dark-subtle sticky-top" expand="md">
+                <NavbarBrand href="/landing-page">
+                    Ominimo Blog
+                </NavbarBrand>
+            </Navbar>
+            <Form className="mt-2">
+                <Row>
+                    <Col md={6}>
+                        <FormGroup>
+                            <Label for="email">
+                                Email
+                            </Label>
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </FormGroup>
+                    </Col>
+                    <Col md={6}>
+                        <FormGroup>
+                            <Label for="password">
+                                Jelszó
+                            </Label>
+                            <Input
+                                id="password"
+                                name="password"
+                                type="password"
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </FormGroup>
+                    </Col>
+                </Row>
+                <FormGroup>
+                    <Label for="name">
+                        Név
+                    </Label>
+                    <Input
+                        id="name"
+                        name="name"
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                </FormGroup>
+                <Button
+                    onClick={handleRegister}
+                    color="primary"
+                >
+                    Regisztráció
+                </Button>
+            </Form>
+        </Container>
     );
 }
 
